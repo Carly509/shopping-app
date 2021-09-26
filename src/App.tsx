@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useQuery } from "react-query";
 //components
+import Cart from "./Cart/Cart";
 import Item from './Item/Item';
 import { Drawer, CircularProgress, Grid, Badge  } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 //styles
 import { AppContainer, StyledIconButton } from "./App.styles";
-import { Wrapper } from "./Item/Item.styles";
 //types
 export type ProductItemType = {
   id: number,
@@ -14,7 +14,7 @@ export type ProductItemType = {
   price: number,
   image: string,
   description: string,
-  quantity: number,
+  amount: number,
   category: string,
   isAvailable: boolean,
   isInCart: boolean,
@@ -38,12 +38,11 @@ const App = () => {
      getProducts
      );
      console.log(data);
-      const getTotalItems= (items: ProductItemType[]) => null;
+      const getTotalItems= (items: ProductItemType[]) => 
+      items.reduce((acc: number, item) => acc + item.amount, 0);
      const handleAddToCart = (clickedItem: ProductItemType) => null;
      const handleRemoveFromCart = () => null;
       const handleRemoveAllFromCart = () => null;
-      const handleOpenCart = () => null;
-      const handleCloseCart = () => null;
       const handleOpenDrawer = () => null;
       const handleCloseDrawer = () => null;
       const handleOpenProduct = () => null;
@@ -54,7 +53,7 @@ const App = () => {
   return (
    <AppContainer>
      <Drawer anchor='right' open={cartIsOpen} onClose={() => setCartIsOpen(false)}>
-       caert goes here
+      <Cart cartItems={cartItem} addToCart={handleAddToCart} removeFromCart={handleRemoveFromCart} />
      </Drawer>
      <StyledIconButton onClick={() => setCartIsOpen(true)}>
        <Badge badgeContent={getTotalItems(cartItem)} color='error'>
