@@ -40,9 +40,47 @@ const App = () => {
      console.log(data);
       const getTotalItems= (items: ProductItemType[]) => 
       items.reduce((acc: number, item) => acc + item.amount, 0);
-     const handleAddToCart = (clickedItem: ProductItemType) => null;
-     const handleRemoveFromCart = () => null;
-      const handleRemoveAllFromCart = () => null;
+     const handleAddToCart = (clickedItem: ProductItemType) => {
+       setCartItem(prev => {
+         // 1. is the item already in the cart?
+         const isInCart = prev.find(item => item.id === clickedItem.id);
+         if (isInCart) {
+           return prev.map(item => 
+            item.id === clickedItem.id
+            ? { ...item, amount: item.amount + 1 }  
+            : item
+            );
+         }
+          // 2. if not, add it
+          return [...prev, {...clickedItem, amount : 1}];
+        });
+      };
+   
+     const handleRemoveFromCart = (id: number) => {
+        setCartItem(prev => (
+          // prev.reduce((acc: ProductItemType[], item) => {
+          //   if (item.id === id) {
+          //     return [...acc, { ...item, amount: item.amount - 1 }];
+          //   }
+          //   return acc;
+          // }
+          // , prev)
+          prev.reduce((acc, item) => {
+            if (item.id === id) {
+              if (item.amount === 1) return acc;
+              return [...acc, { ...item, amount: item.amount - 1 }];
+            }
+        else {
+          return [...acc, item];
+        }
+          }, [] as ProductItemType[])
+        ));
+     }
+      const handleRemoveAllFromCart = (id: number) => {
+        setCartItem(prev => {
+          return prev.filter(item => item.id !== id);
+        });
+      }
       const handleOpenDrawer = () => null;
       const handleCloseDrawer = () => null;
       const handleOpenProduct = () => null;
